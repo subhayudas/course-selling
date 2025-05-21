@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
+import { 
   User,
   Lock,
-  Bell,
-  CreditCard,
+  Bell, 
+  CreditCard, 
   LogOut,
   Mail,
   Phone,
@@ -42,14 +42,14 @@ const AccountSettings = () => {
     if (user) {
       loadProfile();
     }
-  }, [user, loadProfile]);
+  }, [user]);
 
-  const loadProfile = useCallback(async () => {
+  const loadProfile = async () => {
     if (!user?.id) return;
-
+    
     setIsLoading(true);
     const { data, error } = await profileService.getProfile(user.id);
-
+    
     if (error) {
       toast({
         title: "Error",
@@ -65,9 +65,9 @@ const AccountSettings = () => {
         avatar_url: data.avatar_url || ""
       });
     }
-
+    
     setIsLoading(false);
-  }, [user, setIsLoading, setFormData]);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -84,7 +84,7 @@ const AccountSettings = () => {
 
     try {
       const { path, error: uploadError } = await profileService.uploadAvatar(user.id, file);
-
+      
       if (uploadError) throw uploadError;
       if (!path) throw new Error("Failed to get avatar URL");
 
@@ -196,11 +196,11 @@ const AccountSettings = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-
+      
       <div className="pt-20 pb-10 bg-gray-50 dark:bg-gray-900 flex-grow">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="text-3xl font-bold mb-6">Account Settings</h1>
-
+          
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2">
               <TabsTrigger value="profile" className="gap-2">
@@ -220,7 +220,7 @@ const AccountSettings = () => {
                 <span className="hidden sm:inline">Billing</span>
               </TabsTrigger>
             </TabsList>
-
+            
             {/* Profile Tab */}
             <TabsContent value="profile">
               <Card>
@@ -246,17 +246,17 @@ const AccountSettings = () => {
                       )}
                       <label htmlFor="avatar-upload" className="absolute -bottom-1 -right-1 h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
                         <Camera className="h-4 w-4" />
-                        <input
-                          id="avatar-upload"
-                          type="file"
-                          className="sr-only"
+                        <input 
+                          id="avatar-upload" 
+                          type="file" 
+                          className="sr-only" 
                           accept="image/*"
                           onChange={handleAvatarChange}
                           disabled={isLoading || isSaving}
                         />
                       </label>
                     </div>
-
+                    
                     <div className="space-y-2 text-center sm:text-left">
                       <h3 className="font-medium">Profile Picture</h3>
                       <p className="text-sm text-gray-500">
@@ -264,62 +264,62 @@ const AccountSettings = () => {
                       </p>
                     </div>
                   </div>
-
+                  
                   <div className="grid grid-cols-1 gap-4 w-full">
                     <div>
                       <label htmlFor="full_name" className="block text-sm font-medium mb-1">Full Name</label>
-                      <Input
-                        id="full_name"
-                        name="full_name"
-                        value={formData.full_name}
-                        onChange={handleChange}
+                      <Input 
+                        id="full_name" 
+                        name="full_name" 
+                        value={formData.full_name} 
+                        onChange={handleChange} 
                         disabled={isLoading || isSaving}
                         placeholder="Enter your full name"
                       />
                     </div>
                   </div>
-
+                  
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium mb-1">Email Address</label>
-                    <Input
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      disabled={true}
-                      className="bg-muted"
+                    <Input 
+                      id="email" 
+                      name="email" 
+                      value={formData.email} 
+                      disabled={true} 
+                      className="bg-muted" 
                     />
                     <p className="text-xs text-muted-foreground mt-1">Email cannot be changed. Contact support for assistance.</p>
                   </div>
-
+                  
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone Number</label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
+                    <Input 
+                      id="phone" 
+                      name="phone" 
+                      value={formData.phone} 
+                      onChange={handleChange} 
                       disabled={isLoading || isSaving}
                       placeholder="Enter your phone number"
                     />
                   </div>
-
+                  
                   <div>
                     <label htmlFor="bio" className="block text-sm font-medium mb-1">Bio</label>
-                    <Textarea
-                      id="bio"
-                      name="bio"
-                      rows={4}
-                      value={formData.bio}
-                      onChange={handleChange}
+                    <Textarea 
+                      id="bio" 
+                      name="bio" 
+                      rows={4} 
+                      value={formData.bio} 
+                      onChange={handleChange} 
                       disabled={isLoading || isSaving}
                       placeholder="Tell us about yourself"
                     />
                   </div>
-
+                  
                   <div className="flex justify-end">
-                    <Button
-                      onClick={handleProfileUpdate}
-                      className="w-full sm:w-auto"
+                    <Button 
+                      onClick={handleProfileUpdate} 
+                      className="w-full sm:w-auto" 
                       disabled={isLoading || isSaving}
                     >
                       {isSaving ? (
@@ -336,7 +336,7 @@ const AccountSettings = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-
+            
             {/* Security Tab */}
             <TabsContent value="security">
               <Card>
@@ -349,47 +349,47 @@ const AccountSettings = () => {
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Change Password</h3>
-
+                    
                   <form onSubmit={handlePasswordChange} className="space-y-4">
                     <div>
                       <label htmlFor="password" className="block text-sm font-medium mb-1">Current Password</label>
-                      <Input
-                        id="currentPassword"
-                        name="currentPassword"
-                        type="password"
+                      <Input 
+                        id="currentPassword" 
+                        name="currentPassword" 
+                        type="password" 
                         value={passwordForm.currentPassword}
                         onChange={handlePasswordFormChange}
                         disabled={isSaving}
-                        required
+                        required 
                       />
                     </div>
-
+                    
                     <div>
                       <label htmlFor="newPassword" className="block text-sm font-medium mb-1">New Password</label>
-                      <Input
-                        id="newPassword"
-                        name="newPassword"
-                        type="password"
+                      <Input 
+                        id="newPassword" 
+                        name="newPassword" 
+                        type="password" 
                         value={passwordForm.newPassword}
                         onChange={handlePasswordFormChange}
                         disabled={isSaving}
-                        required
+                        required 
                       />
                     </div>
-
+                    
                     <div>
                       <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">Confirm New Password</label>
-                      <Input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
+                      <Input 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        type="password" 
                         value={passwordForm.confirmPassword}
                         onChange={handlePasswordFormChange}
                         disabled={isSaving}
-                        required
+                        required 
                       />
                     </div>
-
+                    
                     <div className="pt-4">
                       <Button type="submit" disabled={isSaving}>
                         {isSaving ? (
@@ -403,10 +403,10 @@ const AccountSettings = () => {
                     </div>
                   </form>
                   </div>
-
+                  
                   <div className="border-t pt-4 space-y-4">
                     <h3 className="text-lg font-medium">Two-Factor Authentication</h3>
-
+                    
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Two-factor authentication is off</p>
@@ -417,10 +417,10 @@ const AccountSettings = () => {
                       <Button variant="outline">Enable</Button>
                     </div>
                   </div>
-
+                  
                   <div className="border-t pt-4 space-y-4">
                     <h3 className="text-lg font-medium text-red-600">Danger Zone</h3>
-
+                    
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Delete account</p>
@@ -434,7 +434,7 @@ const AccountSettings = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-
+            
             {/* Notifications Tab */}
             <TabsContent value="notifications">
               <Card>
@@ -448,7 +448,7 @@ const AccountSettings = () => {
                   <div className="space-y-6">
                     <div className="space-y-3">
                       <h3 className="font-medium">Email Notifications</h3>
-
+                      
                       <div className="flex items-center justify-between py-2 border-b">
                         <div>
                           <p className="font-medium">Course Updates</p>
@@ -461,7 +461,7 @@ const AccountSettings = () => {
                           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
                         </label>
                       </div>
-
+                      
                       <div className="flex items-center justify-between py-2 border-b">
                         <div>
                           <p className="font-medium">Promotions and Offers</p>
@@ -474,7 +474,7 @@ const AccountSettings = () => {
                           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
                         </label>
                       </div>
-
+                      
                       <div className="flex items-center justify-between py-2 border-b">
                         <div>
                           <p className="font-medium">Achievement Notifications</p>
@@ -487,7 +487,7 @@ const AccountSettings = () => {
                           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
                         </label>
                       </div>
-
+                      
                       <div className="flex items-center justify-between py-2">
                         <div>
                           <p className="font-medium">Newsletter</p>
@@ -501,10 +501,10 @@ const AccountSettings = () => {
                         </label>
                       </div>
                     </div>
-
+                    
                     <div className="space-y-3">
                       <h3 className="font-medium">Push Notifications</h3>
-
+                      
                       <div className="flex items-center justify-between py-2 border-b">
                         <div>
                           <p className="font-medium">Browser Notifications</p>
@@ -515,7 +515,7 @@ const AccountSettings = () => {
                         <Button variant="outline" size="sm">Enable in Browser</Button>
                       </div>
                     </div>
-
+                    
                     <div className="flex justify-end">
                       <Button>Save Preferences</Button>
                     </div>
@@ -523,7 +523,7 @@ const AccountSettings = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-
+            
             {/* Billing Tab */}
             <TabsContent value="billing">
               <Card>
@@ -536,7 +536,7 @@ const AccountSettings = () => {
                 <CardContent className="space-y-6">
                   <div>
                     <h3 className="text-lg font-medium mb-4">Payment Methods</h3>
-
+                    
                     <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 relative">
                       <div className="flex items-center">
                         <div className="mr-4">
@@ -554,16 +554,16 @@ const AccountSettings = () => {
                         <Button variant="outline" size="sm" className="text-red-500">Remove</Button>
                       </div>
                     </div>
-
+                    
                     <Button variant="outline" className="gap-2">
                       <CreditCard className="h-4 w-4" />
                       Add Payment Method
                     </Button>
                   </div>
-
+                  
                   <div className="border-t pt-6">
                     <h3 className="text-lg font-medium mb-4">Billing Address</h3>
-
+                    
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium">Full Name</label>
@@ -598,13 +598,13 @@ const AccountSettings = () => {
                         <Input defaultValue="United States" />
                       </div>
                     </div>
-
+                    
                     <Button>Update Billing Address</Button>
                   </div>
-
+                  
                   <div className="border-t pt-6">
                     <h3 className="text-lg font-medium mb-4">Billing History</h3>
-
+                    
                     <div className="rounded-lg overflow-hidden border">
                       <table className="w-full text-sm">
                         <thead className="bg-gray-50 dark:bg-gray-800">
@@ -642,7 +642,7 @@ const AccountSettings = () => {
           </Tabs>
         </div>
       </div>
-
+      
       <Footer />
     </div>
   );
