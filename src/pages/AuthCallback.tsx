@@ -8,21 +8,31 @@ export default function AuthCallback() {
   useEffect(() => {
     // Handle the OAuth callback
     const handleAuthCallback = async () => {
-      const { hash, searchParams } = new URL(window.location.href);
-      const error = searchParams.get('error');
-      const errorDescription = searchParams.get('error_description');
+      try {
+        // Check if window.location.href is a valid URL
+        if (!window.location.href || typeof window.location.href !== 'string') {
+          console.error('Invalid window.location.href');
+          navigate('/login');
+          return;
+        }
 
-      if (error) {
-        console.error('Error during authentication:', error, errorDescription);
-        navigate('/login', { state: { error: errorDescription || 'Authentication failed' } });
-        return;
-      }
+        // Make sure we have a valid URL before constructing the URL object
+        const url = new URL(window.location.href);
+        const { hash, searchParams } = url;
+        const error = searchParams.get('error');
+        const errorDescription = searchParams.get('error_description');
+
+        if (error) {
+          console.error('Error during authentication:', error, errorDescription);
+          navigate('/login', { state: { error: errorDescription || 'Authentication failed' } });
+          return;
+        }
 
       // If there's a hash in the URL, it might contain the access token
       if (hash) {
         // Let Supabase handle the hash fragment
         const { data, error } = await supabase.auth.getSession();
-        
+
         if (error) {
           console.error('Error getting session:', error.message);
           navigate('/login');
@@ -38,6 +48,11 @@ export default function AuthCallback() {
 
       // If we get here, something unexpected happened
       navigate('/login');
+      } catch (err) {
+        // Catch any errors that might occur during URL parsing or other operations
+        console.error('Error in auth callback:', err);
+        navigate('/login', { state: { error: 'Authentication failed. Please try again.' } });
+      }
     };
 
     handleAuthCallback();

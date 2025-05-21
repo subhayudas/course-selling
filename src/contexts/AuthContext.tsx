@@ -58,13 +58,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    return { error };
+    try {
+      // Ensure we have a valid origin
+      const origin = window.location.origin || 'https://your-netlify-site-url.netlify.app';
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${origin}/auth/callback`,
+        },
+      });
+      return { error };
+    } catch (err) {
+      console.error('Error signing in with Google:', err);
+      return { error: new Error('Failed to sign in with Google. Please try again.') };
+    }
   };
 
   const signOut = async () => {
