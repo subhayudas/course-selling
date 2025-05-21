@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Handle SPA routing - redirect all paths to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables settings
+[build.environment]
+  # These are placeholder values - actual values should be set in Netlify UI
+  NEXT_PUBLIC_SUPABASE_URL = "placeholder"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "placeholder"
